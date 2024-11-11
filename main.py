@@ -27,7 +27,7 @@ else:
 dir_name = redirect_url.split('/')[-1].replace('.zip', '') + '/'
 
 res = s3_client.list_objects(
-    bucket_name=os.getenv('S3_BUCKET'),
+    bucket_name=os.getenv('S3_BUCKET_TIMETABLE'),
     prefix=dir_name,
     recursive=False
 )
@@ -58,7 +58,7 @@ with zipfile.ZipFile(BytesIO(response_timetable.content)) as z:
             s3_path = dir_name + parquet_filename
 
             s3_client.put_object(
-                bucket_name=os.getenv('S3_BUCKET'),
+                bucket_name=os.getenv('S3_BUCKET_TIMETABLE'),
                 object_name=s3_path,
                 data=parquet_buffer,
                 length=parquet_buffer.getbuffer().nbytes,
