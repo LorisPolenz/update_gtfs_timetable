@@ -6,7 +6,7 @@ from io import BytesIO
 from minio import Minio
 
 # The initial URL that redirects
-URL = 'https://opentransportdata.swiss/de/dataset/timetable-2024-gtfs2020/permalink'
+URL = 'https://data.opentransportdata.swiss/dataset/timetable-2025-gtfs2020/permalink'
 
 # Initialize the S3 client
 s3_client = Minio(os.getenv('S3_ENDPOINT'),
@@ -50,7 +50,8 @@ with zipfile.ZipFile(BytesIO(response_timetable.content)) as z:
 
         with z.open(filename) as f:
             parquet_buffer = BytesIO()
-            pd.read_csv(f).to_parquet(parquet_buffer, index=False)
+            pd.read_csv(f, low_memory=False).to_parquet(
+                parquet_buffer, index=False)
             parquet_buffer.seek(0)
 
             # Define Parquet filename for S3
